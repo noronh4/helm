@@ -1,5 +1,5 @@
 ---
-replicas: 1
+replicas: 2
 
 # Allows you to add any config files in /usr/share/logstash/config/
 # such as logstash.yml and log4j2.properties
@@ -71,7 +71,7 @@ hostAliases: []
 #  - "bar.local"
 
 image: "docker.elastic.co/logstash/logstash"
-imageTag: "8.1.0"
+imageTag: "7.17.3"
 imagePullPolicy: "IfNotPresent"
 imagePullSecrets: []
 
@@ -83,11 +83,8 @@ labels: {}
 logstashJavaOpts: "-Xmx1g -Xms1g"
 
 resources:
-  requests:
-    cpu: "100m"
-    memory: "1536Mi"
   limits:
-    cpu: "1000m"
+    cpu: "700"
     memory: "1536Mi"
 
 volumeClaimTemplate:
@@ -261,19 +258,18 @@ lifecycle:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
 
 service:
-  {}
-  # annotations: {}
-  # type: ClusterIP
-  # loadBalancerIP: ""
-  # ports:
-  #   - name: beats
-  #     port: 5044
-  #     protocol: TCP
-  #     targetPort: 5044
-  #   - name: http
-  #     port: 8080
-  #     protocol: TCP
-  #     targetPort: 8080
+   annotations: {}
+   type: ClusterIP
+   loadBalancerIP: ""
+   ports:
+     - name: beats
+       port: 5044
+       protocol: TCP
+       targetPort: 5044
+     - name: http
+       port: 8080
+       protocol: TCP
+       targetPort: 8080
 
 ingress:
   enabled: false
