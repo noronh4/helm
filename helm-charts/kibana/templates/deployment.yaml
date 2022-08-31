@@ -47,6 +47,9 @@ spec:
       hostAliases: {{ toYaml .Values.hostAliases | nindent 6 }}
       {{- end }}
       volumes:
+        - name: certs
+          secret:
+            secretName: elasticsearch-master-certs
         {{- range .Values.secretMounts }}
         - name: {{ .name }}
           secret:
@@ -150,6 +153,9 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
+          - name: certs
+            mountPath: /usr/share/kibana/config/certs
+            readOnly: true
           {{- range .Values.secretMounts }}
           - name: {{ .name }}
             mountPath: {{ .path }}
