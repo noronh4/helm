@@ -58,10 +58,10 @@ podAnnotations: {}
 
 resources:
   limits:
-    cpu: "700m"
+    cpu: "500m"
     memory: "2Gi"
 
-protocol: http
+protocol: https
 
 serverHost: "0.0.0.0"
 
@@ -69,7 +69,7 @@ healthCheckPath: "/app/kibana"
 
 # Allows you to add any config files in /usr/share/kibana/config/
 # such as kibana.yml
-kibanaConfig: {}
+kibanaConfig:
   kibana.yml: |
     elasticsearch.ssl:
       key: /usr/share/kibana/config/certs/tls.key
