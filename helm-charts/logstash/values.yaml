@@ -9,8 +9,8 @@ replicas: 2
 logstashConfig: {}
   logstash.yml: |
     xpack.monitoring.enabled: true
-    xpack.monitoring.elasticsearch.username: '${ELASTICSEARCH_USERNAME}'
-    xpack.monitoring.elasticsearch.password: '${ELASTICSEARCH_PASSWORD}'
+    xpack.monitoring.elasticsearch.username: 'logstash_writer'
+    xpack.monitoring.elasticsearch.password: 'T3u2ezX4@v^8'
     xpack.monitoring.elasticsearch.hosts: ["https://security-master:9200"]
     xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/certs/ca.crt
 
@@ -27,6 +27,8 @@ logstashPipeline: {}
       elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
         index => "logstash-%{+YYYY.MM.dd}"
+        user => 'logstash_writer'
+        password => 'T3u2ezX4@v^8'
         ssl => true
         cacert => "/usr/share/logstash/config/certs/ca.crt"
       } 
