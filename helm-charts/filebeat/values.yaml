@@ -4,7 +4,15 @@ daemonset:
   annotations: {}
   # additionals labels
   labels: {}
-  affinity: {}
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: octa/node-lifecycle
+              operator: In
+              values:
+                - od
   # Include the daemonset
   enabled: true
   # Extra environment variables for Filebeat container.
@@ -112,6 +120,10 @@ daemonset:
     operator: "Equal"
     effect: "NoSchedule"
     value: "redis-standalone"
+  - key: "dedicated"
+    operator: "Equal"
+    effect: "NoSchedule"
+    value: "mongodb"
 
 deployment:
   # Annotations to apply to the deployment
