@@ -96,8 +96,10 @@ daemonset:
     privileged: false
   resources:
     requests:
+      cpu: "100m"
+      memory: "200Mi"
     limits:
-      cpu: "400m"
+      cpu: "100m"
       memory: "300Mi"
   tolerations:
   - key: "dedicated"
