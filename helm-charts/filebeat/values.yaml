@@ -13,6 +13,7 @@ daemonset:
               operator: In
               values:
                 - od
+                - pr
   # Include the daemonset
   enabled: true
   # Extra environment variables for Filebeat container.
