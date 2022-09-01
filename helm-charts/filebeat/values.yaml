@@ -23,11 +23,17 @@ daemonset:
   #        name: elasticsearch-master-credentials
   #        key: password
   # Allows you to add any config files in /usr/share/filebeat
-  extraVolumes: []
+  extraVolumes:
+    - name: certs
+      secret:
+        secretName: elasticsearch-master-certs
   # - name: extras
   #   emptyDir: {}
-  extraVolumeMounts: []
-  # - name: extras
+
+  extraVolumeMounts:
+    - name: certs
+      mountPath: /usr/share/filebeat/certs
+  # - name: extrasv
   #   mountPath: /usr/share/extras
   #   readOnly: true
   hostNetworking: false
@@ -46,8 +52,21 @@ daemonset:
             - logs_path:
                 logs_path: "/var/log/containers/"
 
-      output.logstash:
-        hosts: ["logstash-logstash:5044"]
+      output.elasticsearch:
+        hosts: "https://elasticsearch-master:9200"
+        username: 'filebeat_internal'
+        password: '71AE@gNu6Hs#'
+        setup.template.overwrite: false
+        setup.template.settings:
+          index.number_of_shards: 1
+          index.number_of_replicas: 1
+        protocol: https
+        index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+        ssl.certificate_authorities:
+          - /usr/share/filebeat/certs/ca.crt
+      setup.ilm.enabled: false
+      setup.template.name: "filebeat"
+      setup.template.pattern: "filebeat"
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
@@ -70,8 +89,8 @@ daemonset:
   resources:
     requests:
     limits:
-      cpu: "500m"
-      memory: "200Mi"
+      cpu: "400m"
+      memory: "300Mi"
   tolerations:
   - key: "dedicated"
     operator: "Equal"
