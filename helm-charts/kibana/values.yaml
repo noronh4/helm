@@ -1,7 +1,7 @@
 ---
 elasticsearchHosts: "https://elasticsearch-master:9200"
 
-replicas: 2
+replicas: 1
 
 # Extra environment variables to append to this nodeGroup
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
@@ -57,11 +57,14 @@ podAnnotations: {}
 # iam.amazonaws.com/role: es-cluster
 
 resources:
-  limits:
+  requests:
     cpu: "500m"
-    memory: "2Gi"
+    memory: "500Mi"
+  limits:
+    cpu: "700m"
+    memory: "700Mi"
 
-protocol: https
+protocol: http
 
 serverHost: "0.0.0.0"
 
@@ -72,7 +75,6 @@ healthCheckPath: "/app/kibana"
 kibanaConfig:
   kibana.yml: |
     elasticsearch.ssl:
-      key: /usr/share/kibana/config/certs/tls.key
       certificateAuthorities: /usr/share/kibana/config/certs/ca.crt
       verificationMode: certificate
 
@@ -101,12 +103,16 @@ priorityClassName: ""
 httpPort: 5601
 
 extraVolumes:
-  []
+  - name: certs
+    secret:
+      secretName: elasticsearch-master-certs
   # - name: extras
   #   emptyDir: {}
 
 extraVolumeMounts:
-  []
+  - name: certs
+    mountPath: /usr/share/kibana/config/certs
+    readOnly: true
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
@@ -142,20 +148,25 @@ service:
   httpPortName: http
 
 ingress:
-  enabled: false
-  className: "nginx"
+  enabled: true
+  className: "nginx-external"
   pathtype: ImplementationSpecific
-  annotations: {}
+  annotations: 
   # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+    #kubernetes.io/tls-acme: "true"
   hosts:
-    - host: kibana-example.local
+    - host: kibana.qaoctadesk.com
       paths:
-        - path: /
-  #tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+      - backend:
+          service:
+            name: kibana-kibana
+            port:
+              name: http
+        path: /
+  tls: 
+    - secretName: tls-cluster-qaoctadesk-com
+      hosts:
+        - kibana.qaoctadesk.com
 
 readinessProbe:
   failureThreshold: 3
