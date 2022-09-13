@@ -13,7 +13,7 @@ daemonset:
               operator: In
               values:
                 - od
-                - pr
+                - prd
   # Include the daemonset
   enabled: true
   # Extra environment variables for Filebeat container.
@@ -61,21 +61,24 @@ daemonset:
             - logs_path:
                 logs_path: "/var/log/containers/"
 
-      output.elasticsearch:
-        hosts: "https://elasticsearch-master:9200"
-        username: 'filebeat_internal'
-        password: '71AE@gNu6Hs#'
-        setup.template.overwrite: false
-        setup.template.settings:
-          index.number_of_shards: 1
-          index.number_of_replicas: 1
-        protocol: https
-        index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
-        ssl.certificate_authorities:
-          - /usr/share/filebeat/certs/ca.crt
-      setup.ilm.enabled: false
-      setup.template.name: "filebeat"
-      setup.template.pattern: "filebeat"
+      output.logstash:
+        hosts: ["logstash-logstash:5044"]
+      
+      #output.elasticsearch:
+      #  hosts: "https://elasticsearch-master:9200"
+      #  username: 'filebeat_internal'
+      #  password: '71AE@gNu6Hs#'
+      #  setup.template.overwrite: false
+      #  setup.template.settings:
+      #    index.number_of_shards: 1
+      #    index.number_of_replicas: 1
+      #  protocol: https
+      #  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+      #  ssl.certificate_authorities:
+      #    - /usr/share/filebeat/certs/ca.crt
+      #setup.ilm.enabled: false
+      #setup.template.name: "filebeat"
+      #setup.template.pattern: "filebeat"
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}

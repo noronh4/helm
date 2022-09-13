@@ -1,5 +1,5 @@
 ---
-replicas: 2
+replicas: 1
 
 # Allows you to add any config files in /usr/share/logstash/config/
 # such as logstash.yml and log4j2.properties
@@ -8,11 +8,12 @@ replicas: 2
 # to make default probes work.
 logstashConfig:
   logstash.yml: |
+    http.host: 0.0.0.0
     xpack.monitoring.enabled: true
-    xpack.monitoring.elasticsearch.username: 'logstash_writer'
+    xpack.monitoring.elasticsearch.username: 'logstash_internal'
     xpack.monitoring.elasticsearch.password: 'T3u2ezX4@v^8'
-    xpack.monitoring.elasticsearch.hosts: ["https://security-master:9200"]
-    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/certs/ca.crt
+    xpack.monitoring.elasticsearch.hosts: "https://elasticsearch-master:9200"
+    xpack.monitoring.elasticsearch.ssl.certificate_authority: "/usr/share/logstash/config/certs/ca.crt"
 
 # Allows you to add any pipeline files in /usr/share/logstash/pipeline/
 ### ***warn*** there is a hardcoded logstash.conf in the image, override it first
@@ -27,7 +28,7 @@ logstashPipeline:
       elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
         index => "logstash-%{+YYYY.MM.dd}"
-        user => 'logstash_writer'
+        user => 'logstash_internal'
         password => 'T3u2ezX4@v^8'
         ssl => true
         cacert => "/usr/share/logstash/config/certs/ca.crt"
@@ -92,9 +93,12 @@ labels: {}
 logstashJavaOpts: "-Xmx1g -Xms1g"
 
 resources:
+  requests:
+    cpu: "400m"
+    memory: "500Mi"
   limits:
-    cpu: "700"
-    memory: "1536Mi"
+    cpu: "400"
+    memory: "1500Mi"
 
 volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
@@ -135,12 +139,16 @@ persistence:
   annotations: {}
 
 extraVolumes:
-  []
+  - name: certs
+    secret:
+      secretName: elasticsearch-master-certs
   # - name: extras
   #   emptyDir: {}
 
 extraVolumeMounts:
-  []
+  - name: certs
+    mountPath: /usr/share/logstash/config/certs
+    readOnly: true
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
@@ -240,9 +248,9 @@ readinessProbe:
   httpGet:
     path: /
     port: http
-  initialDelaySeconds: 60
-  periodSeconds: 10
-  timeoutSeconds: 5
+  initialDelaySeconds: 120
+  periodSeconds: 20
+  timeoutSeconds: 20
   failureThreshold: 3
   successThreshold: 3
 
@@ -252,7 +260,11 @@ readinessProbe:
 schedulerName: ""
 
 nodeSelector: {}
-tolerations: []
+tolerations: 
+#- key: "dedicated"
+#  operator: "Equal"
+#  effect: "NoSchedule"
+#  value: "generic"
 
 nameOverride: ""
 fullnameOverride: ""

@@ -117,9 +117,6 @@ spec:
       {{- end }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriod }}
       volumes:
-        - name: certs
-          secret:
-            secretName: elasticsearch-master-certs
         {{- range .Values.secretMounts }}
         - name: {{ .name }}
           secret:
@@ -191,9 +188,6 @@ spec:
 {{ toYaml .Values.envFrom | indent 10 }}
 {{- end }}
         volumeMounts:
-          - name: certs
-            mountPath: /usr/share/kibana/config/certs
-            readOnly: true
           {{- if .Values.persistence.enabled }}
           - name: "{{ template "logstash.fullname" . }}"
             mountPath: /usr/share/logstash/data
