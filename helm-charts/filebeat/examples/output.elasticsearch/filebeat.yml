@@ -1,0 +1,15 @@
+output.elasticsearch:
+        hosts: "https://elasticsearch-master:9200"
+        username: 'filebeat_internal'
+        password: '71AE@gNu6Hs#'
+        setup.template.overwrite: false
+        setup.template.settings:
+          index.number_of_shards: 1
+          index.number_of_replicas: 1
+        protocol: https
+        index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+        ssl.certificate_authorities:
+          - /usr/share/filebeat/certs/ca.crt
+      setup.ilm.enabled: false
+      setup.template.name: "filebeat"
+      setup.template.pattern: "filebeat"
