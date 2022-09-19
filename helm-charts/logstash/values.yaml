@@ -22,17 +22,20 @@ logstashPipeline:
     input {
       beats {
         port => "5044"
+        type => "octa-qa-us-east1-001"
       }
     }
-    output { 
-      elasticsearch { 
+    output {
+      if [type] == "octa-qa-us-east1-001" {
+        elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
-        index => "logstash-%{+YYYY.MM.dd}"
+        index => "%{type}-%{+YYYY.MM.dd}"
         user => 'logstash_internal'
         password => 'T3u2ezX4@v^8'
         ssl => true
         cacert => "/usr/share/logstash/config/certs/ca.crt"
-      } 
+        }
+      }
     }
 
 # Allows you to add any pattern files in your custom pattern dir
@@ -95,7 +98,7 @@ logstashJavaOpts: "-Xmx1g -Xms1g"
 resources:
   requests:
     cpu: "400m"
-    memory: "500Mi"
+    memory: "1000Mi"
   limits:
     cpu: "400"
     memory: "1500Mi"
