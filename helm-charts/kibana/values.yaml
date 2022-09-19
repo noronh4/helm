@@ -177,7 +177,10 @@ readinessProbe:
 
 imagePullSecrets: []
 nodeSelector: {}
-tolerations: []
+tolerations:
+- key: "dedicated"
+  operator: "Exists"
+  effect: "NoSchedule"
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:

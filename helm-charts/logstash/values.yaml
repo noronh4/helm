@@ -285,10 +285,9 @@ schedulerName: ""
 
 nodeSelector: {}
 tolerations: 
-#- key: "dedicated"
-#  operator: "Equal"
-#  effect: "NoSchedule"
-#  value: "generic"
+- key: "dedicated"
+  operator: "Exists"
+  effect: "NoSchedule"
 
 nameOverride: ""
 fullnameOverride: ""
