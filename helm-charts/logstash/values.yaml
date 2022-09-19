@@ -22,12 +22,18 @@ logstashPipeline:
     input {
       beats {
         port => "5044"
+        type => "octa-prod-us-east1-001"
       }
+      beats {
+        port => "5045"
+        type => "octa-prod-southameri-east1-001"
+      }
+
     }
     output { 
       elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
-        index => "logstash-%{+YYYY.MM.dd}"
+        index => "${type}-%{+YYYY.MM.dd}"
         user => 'logstash_internal'
         password => 'T3u2ezX4@v^8'
         ssl => true
@@ -287,6 +293,10 @@ service:
        port: 5044
        protocol: TCP
        targetPort: 5044
+     - name: beats
+       port: 5045
+       protocol: TCP
+       targetPort: 5045
      - name: http
        port: 8080
        protocol: TCP
