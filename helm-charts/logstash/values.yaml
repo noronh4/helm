@@ -31,13 +31,24 @@ logstashPipeline:
 
     }
     output { 
-      elasticsearch { 
+      if [type] == "octa-prod-us-east1-001" {
+        elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
         index => "${type}-%{+YYYY.MM.dd}"
         user => 'logstash_internal'
         password => 'T3u2ezX4@v^8'
         ssl => true
         cacert => "/usr/share/logstash/config/certs/ca.crt"
+        }
+      if [type] == "octa-prod-southameri-east1-001" {
+        elasticsearch { 
+        hosts => "https://elasticsearch-master:9200"
+        index => "${type}-%{+YYYY.MM.dd}"
+        user => 'logstash_internal'
+        password => 'T3u2ezX4@v^8'
+        ssl => true
+        cacert => "/usr/share/logstash/config/certs/ca.crt"
+        }
       } 
     }
 
