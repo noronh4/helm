@@ -186,7 +186,7 @@ affinity:
           - key: node_pool
             operator: In
             values:
-            - spot-pool
+            - od-pool-elk
 
 nameOverride: ""
 fullnameOverride: ""

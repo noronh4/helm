@@ -196,7 +196,14 @@ antiAffinity: "hard"
 
 # This is the node affinity settings as defined in
 # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
-nodeAffinity: {}
+nodeAffinity:
+requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms:
+    - matchExpressions:
+      - key: node_pool  
+        operator: In
+        values:
+        - od-pool-elk
 
 # This is inter-pod affinity settings as defined in
 # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
