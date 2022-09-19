@@ -28,7 +28,6 @@ logstashPipeline:
       elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
         index => "logstash-%{+YYYY.MM.dd}"
-        namespace => "octa-qa-us-east1-001"
         user => 'logstash_internal'
         password => 'T3u2ezX4@v^8'
         ssl => true
