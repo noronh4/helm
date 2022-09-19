@@ -61,7 +61,7 @@ resources:
     cpu: "500m"
     memory: "500Mi"
   limits:
-    cpu: "700m"
+    cpu: "500m"
     memory: "700Mi"
 
 protocol: http
@@ -178,7 +178,15 @@ readinessProbe:
 imagePullSecrets: []
 nodeSelector: {}
 tolerations: []
-affinity: {}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: node_pool
+            operator: In
+            values:
+            - spot-pool
 
 nameOverride: ""
 fullnameOverride: ""
