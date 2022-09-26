@@ -9,11 +9,10 @@ daemonset:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
           - matchExpressions:
-            - key: octa/node-lifecycle
+            - key: node_pool
               operator: In
               values:
-                - od
-                - prd
+                - od-pool-generic
   # Include the daemonset
   enabled: true
   # Extra environment variables for Filebeat container.
@@ -32,16 +31,11 @@ daemonset:
   #        name: elasticsearch-master-credentials
   #        key: password
   # Allows you to add any config files in /usr/share/filebeat
-  extraVolumes:
-    - name: certs
-      secret:
-        secretName: elasticsearch-master-certs
+  extraVolumes: []
   # - name: extras
   #   emptyDir: {}
 
-  extraVolumeMounts:
-    - name: certs
-      mountPath: /usr/share/filebeat/certs
+  extraVolumeMounts: []
   # - name: extrasv
   #   mountPath: /usr/share/extras
   #   readOnly: true
@@ -62,23 +56,10 @@ daemonset:
                 logs_path: "/var/log/containers/"
 
       output.logstash:
-        hosts: ["logstash-logstash:5044"]
+        hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5044"]  #LOGSTASH PORT TO PRD-US CLUSTER
+        #hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5045"] #LOGSTASH PORT TO PRD-SA CLUSTER
+
       
-      #output.elasticsearch:
-      #  hosts: "https://elasticsearch-master:9200"
-      #  username: 'filebeat_internal'
-      #  password: '71AE@gNu6Hs#'
-      #  setup.template.overwrite: false
-      #  setup.template.settings:
-      #    index.number_of_shards: 1
-      #    index.number_of_replicas: 1
-      #  protocol: https
-      #  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
-      #  ssl.certificate_authorities:
-      #    - /usr/share/filebeat/certs/ca.crt
-      #setup.ilm.enabled: false
-      #setup.template.name: "filebeat"
-      #setup.template.pattern: "filebeat"
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
@@ -110,26 +91,26 @@ daemonset:
     operator: "Equal"
     effect: "NoSchedule"
     value: "generic"
-  - key: "dedicated"
-    operator: "Equal"
-    effect: "NoSchedule"
-    value: "default-rabbitmq"
-  - key: "dedicated"
-    operator: "Equal"
-    effect: "NoSchedule"
-    value: "postgresql"
-  - key: "dedicated"
-    operator: "Equal"
-    effect: "NoSchedule"
-    value: "redis-cluster"
-  - key: "dedicated"
-    operator: "Equal"
-    effect: "NoSchedule"
-    value: "redis-standalone"
-  - key: "dedicated"
-    operator: "Equal"
-    effect: "NoSchedule"
-    value: "mongodb"
+  #- key: "dedicated"
+  #  operator: "Equal"
+  #  effect: "NoSchedule"
+  #  value: "default-rabbitmq"
+  #- key: "dedicated"
+  #  operator: "Equal"
+  #  effect: "NoSchedule"
+  #  value: "postgresql"
+  #- key: "dedicated"
+  #  operator: "Equal"
+  #  effect: "NoSchedule"
+  #  value: "redis-cluster"
+  #- key: "dedicated"
+  #  operator: "Equal"
+  #  effect: "NoSchedule"
+  #  value: "redis-standalone"
+  #- key: "dedicated"
+  #  operator: "Equal"
+  #  effect: "NoSchedule"
+  #  value: "mongodb"
 
 deployment:
   # Annotations to apply to the deployment
