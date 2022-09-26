@@ -9,10 +9,13 @@ daemonset:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
           - matchExpressions:
-            - key: node_pool
+            - key: octa/node-lifecycle
               operator: In
               values:
-                - od-pool-generic
+                - od
+                - pr
+              
+                
   # Include the daemonset
   enabled: true
   # Extra environment variables for Filebeat container.
@@ -56,8 +59,8 @@ daemonset:
                 logs_path: "/var/log/containers/"
 
       output.logstash:
-        hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5044"]  #LOGSTASH PORT TO PRD-US CLUSTER
-        #hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5045"] #LOGSTASH PORT TO PRD-SA CLUSTER
+        #hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5044"]  #LOGSTASH PORT TO PRD-US CLUSTER
+        hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5045"] #LOGSTASH PORT TO PRD-SA CLUSTER
 
       
   # Only used when updateStrategy is set to "RollingUpdate"
@@ -88,29 +91,8 @@ daemonset:
       memory: "300Mi"
   tolerations:
   - key: "dedicated"
-    operator: "Equal"
+    operator: "Exists"
     effect: "NoSchedule"
-    value: "generic"
-  #- key: "dedicated"
-  #  operator: "Equal"
-  #  effect: "NoSchedule"
-  #  value: "default-rabbitmq"
-  #- key: "dedicated"
-  #  operator: "Equal"
-  #  effect: "NoSchedule"
-  #  value: "postgresql"
-  #- key: "dedicated"
-  #  operator: "Equal"
-  #  effect: "NoSchedule"
-  #  value: "redis-cluster"
-  #- key: "dedicated"
-  #  operator: "Equal"
-  #  effect: "NoSchedule"
-  #  value: "redis-standalone"
-  #- key: "dedicated"
-  #  operator: "Equal"
-  #  effect: "NoSchedule"
-  #  value: "mongodb"
 
 deployment:
   # Annotations to apply to the deployment
@@ -234,9 +216,9 @@ readinessProbe:
         #!/usr/bin/env bash -e
         filebeat test output
   failureThreshold: 3
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 5
+  initialDelaySeconds: 40
+  periodSeconds: 20
+  timeoutSeconds: 15
 
 # Whether this chart should self-manage its service account, role, and associated role binding.
 managedServiceAccount: true
