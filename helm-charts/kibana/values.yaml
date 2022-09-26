@@ -148,14 +148,15 @@ service:
   httpPortName: http
 
 ingress:
-  enabled: false
+  enabled: true
   className: "nginx-external"
   pathtype: ImplementationSpecific
   annotations: 
-  # kubernetes.io/ingress.class: nginx
+    #kubernetes.io/ingress.class: nginx
     #kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
   hosts:
-    - host: kibana.qaoctadesk.com
+    - host: kibana.monitoring.octadesk.services
       paths:
       - backend:
           service:
@@ -164,9 +165,9 @@ ingress:
               name: http
         path: /
   tls: 
-    - secretName: tls-cluster-qaoctadesk-com
+    - secretName: kibana-general-tls
       hosts:
-        - kibana.qaoctadesk.com
+        - kibana.monitoring.octadesk.services
 
 readinessProbe:
   failureThreshold: 3
