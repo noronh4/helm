@@ -303,8 +303,11 @@ lifecycle:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
 
 service:
-   annotations: {}
-   type: ClusterIP
+   annotations:
+      external-dns.alpha.kubernetes.io/hostname: "logstash-logstash.monitoring.octadesk.internal.svc"
+      networking.gke.io/load-balancer-type: "Internal"
+      networking.gke.io/internal-load-balancer-allow-global-access: "true"
+   type: LoadBalancer
    loadBalancerIP: ""
    ports:
      - name: beats-us
@@ -315,10 +318,10 @@ service:
        port: 5045
        protocol: TCP
        targetPort: 5045
-     - name: http
-       port: 8080
-       protocol: TCP
-       targetPort: 8080
+     #- name: http
+     #  port: 8080
+     #  protocol: TCP
+     #  targetPort: 8080
 
 ingress:
   enabled: false
@@ -332,8 +335,8 @@ ingress:
       paths:
         - path: /beats
           servicePort: 5044
-        - path: /http
-          servicePort: 8080
+        #- path: /http
+        #  servicePort: 8080
   tls: []
   #  - secretName: logstash-example-tls
   #    hosts:
