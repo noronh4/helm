@@ -22,19 +22,16 @@ logstashPipeline:
     input {
       beats {
         port => "5044"
-        type => "octa-qa-us-east1-001"
       }
     }
     output {
-      if [type] == "octa-qa-us-east1-001" {
         elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
-        index => "%{type}-%{+YYYY.MM.dd}"
+        index => "logstash-%{+YYYY.MM.dd}"
         user => 'logstash_internal'
         password => 'T3u2ezX4@v^8'
         ssl => true
         cacert => "/usr/share/logstash/config/certs/ca.crt"
-        }
       }
     }
 
