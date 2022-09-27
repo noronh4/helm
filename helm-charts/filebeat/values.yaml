@@ -4,18 +4,7 @@ daemonset:
   annotations: {}
   # additionals labels
   labels: {}
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-            - key: octa/node-lifecycle
-              operator: In
-              values:
-                - od
-                - pr
-              
-                
+  affinity: {}                
   # Include the daemonset
   enabled: true
   # Extra environment variables for Filebeat container.
