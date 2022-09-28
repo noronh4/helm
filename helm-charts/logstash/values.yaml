@@ -1,5 +1,5 @@
 ---
-replicas: 2
+replicas: 3
 
 # Allows you to add any config files in /usr/share/logstash/config/
 # such as logstash.yml and log4j2.properties
@@ -113,10 +113,10 @@ logstashJavaOpts: "-Xmx1g -Xms1g"
 resources:
   requests:
     cpu: "500m"
-    memory: "1000Mi"
-  limits:
-    cpu: "1"
     memory: "2000Mi"
+  limits:
+    cpu: "1500m"
+    memory: "2500Mi"
 
 volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
