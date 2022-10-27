@@ -48,8 +48,9 @@ daemonset:
                 logs_path: "/var/log/containers/"
 
       output.logstash:
-        #hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5044"]  #LOGSTASH PORT TO PRD-US CLUSTER
-        hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5045"] #LOGSTASH PORT TO PRD-SA CLUSTER
+        #hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5044"]  #LOGSTASH PORT TO octa-prod-us-east1-001 001 CLUSTER
+        #hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5045"] #LOGSTASH PORT TO octa-prod-southameri-east1-001 002 CLUSTER
+        hosts: ["logstash-logstash.monitoring.octadesk.internal.svc:5046"] #LOGSTASH PORT TO octa-prod-sa-east1-003 003 CLUSTER
 
       
   # Only used when updateStrategy is set to "RollingUpdate"
