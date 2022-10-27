@@ -9,7 +9,7 @@ replicas: 2
 logstashConfig:
   logstash.yml: |
     http.host: 0.0.0.0
-    xpack.monitoring.enabled: true
+    xpack.monitoring.enabled: false
     xpack.monitoring.elasticsearch.username: 'logstash_internal'
     xpack.monitoring.elasticsearch.password: 'hU#9qt8h4tyB3OgF'
     xpack.monitoring.elasticsearch.hosts: "https://elasticsearch-master:9200"
@@ -321,14 +321,18 @@ service:
    type: ClusterIP
    loadBalancerIP: ""
    ports:
-     - name: beats-us
+     - name: beats-octa-prod-us-east1-001
        port: 5044
        protocol: TCP
        targetPort: 5044
-     - name: beats-sa
+     - name: beats-octa-prod-southameri-east1-001
        port: 5045
        protocol: TCP
        targetPort: 5045
+     - name: beats-octa-prod-sa-east1-003
+       port: 5046
+       protocol: TCP
+       targetPort: 5046
      - name: http
        port: 8080
        protocol: TCP
