@@ -28,6 +28,10 @@ logstashPipeline:
         port => "5045"
         type => "octa-prod-southameri-east1-001"
       }
+      beats {
+        port => "5046"
+        type => "octa-prod-sa-east1-003"
+      }
     }
     
     output { 
@@ -42,6 +46,16 @@ logstashPipeline:
         }
       }
       if [type] == "octa-prod-southameri-east1-001" {
+        elasticsearch { 
+        hosts => "https://elasticsearch-master:9200"
+        index => "%{type}-%{+YYYY.MM.dd}"
+        user => 'logstash_internal'
+        password => 'hU#9qt8h4tyB3OgF'
+        ssl => true
+        cacert => "/usr/share/logstash/config/certs/ca.crt"
+        }
+      }
+      if [type] == "octa-prod-sa-east1-003" {
         elasticsearch { 
         hosts => "https://elasticsearch-master:9200"
         index => "%{type}-%{+YYYY.MM.dd}"
